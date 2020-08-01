@@ -5,14 +5,14 @@ makefile 是告诉 make 这个工具如何编译和链接应用程序的文件. 
 
 <!-- vim-markdown-toc GFM -->
 
-    * [Makefile 格式](#makefile-格式)
-    * [`Target` 和 `Phony Target` 假目标](#target-和-phony-target-假目标)
-    * [`make` 的执行顺序](#make-的执行顺序)
-    * [`goal` 的调用](#goal-的调用)
-    * [`@Command` 用法](#command-用法)
-    * [`target` 下 `prerequisites` 和 `recipe` 的执行顺序](#target-下-prerequisites-和-recipe-的执行顺序)
-    * [`$$Variable` 的作用](#variable-的作用)
-    * [如何避免 `target` 被重复执行](#如何避免-target-被重复执行)
+* [Makefile 格式](#makefile-格式)
+* [`Target` 和 `Phony Target` 假目标](#target-和-phony-target-假目标)
+* [`make` 的执行顺序](#make-的执行顺序)
+* [`goal` 的调用](#goal-的调用)
+* [`@Command` 用法](#command-用法)
+* [`target` 下 `prerequisites` 和 `recipe` 的执行顺序](#target-下-prerequisites-和-recipe-的执行顺序)
+* [`$$Variable` 的作用](#variable-的作用)
+* [如何避免 `target` 被重复执行](#如何避免-target-被重复执行)
 * [参考](#参考)
 
 <!-- vim-markdown-toc -->
@@ -143,7 +143,7 @@ go build -o list_people_go list_people.go
 
 相关的原理见官方文档: [4.6 Phony Targets](https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html)
 
-## 参考
+#### 参考
 - [「番外」请入门 Makefile-煎鱼](https://eddycjy.com/posts/go/gin/2018-08-26-makefile/)
 - [从简单实例开始，学会写Makefile（一）](http://blog.fatedier.com/2014/09/08/learn-to-write-makefile-01/)
 - [从简单实例开始，学会写Makefile（二）](http://blog.fatedier.com/2014/09/24/learn-to-write-makefile-02/)
