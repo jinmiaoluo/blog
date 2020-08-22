@@ -1,0 +1,5 @@
+http://www.ruanyifeng.com/blog/atom.xml "~阮一峰" "chinese"
+https://github.com/golang/proposal/commits/master.atom "~golang proposals"
+
+# query
+"query:unread articles:unread = \"yes\""

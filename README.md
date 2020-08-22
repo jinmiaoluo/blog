@@ -7,6 +7,7 @@
 
 #### 未分类
 - [make 和 Makefile](./example/1/)
+- [我的 RSS 订阅习惯](./example/4/)
 
 # RSS 订阅
 - [订阅地址](https://github.com/jinmiaoluo/blog/commits/main.atom)
