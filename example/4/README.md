@@ -54,7 +54,7 @@ brew install newsboat
 4. 按 `q` 退出 `newsboat`
 
 #### 如何添加 Feed demo
-[![asciicast](https://asciinema.org/a/HsoI4YJ2UI91qXGRfpvk7kcLk.svg)](https://asciinema.org/a/HsoI4YJ2UI91qXGRfpvk7kcLk?t=1&autoplay=1)
+[![asciicast](https://asciinema.org/a/EEgF1SrBmuEGeXVjB3ZwzqTfr.svg)](https://asciinema.org/a/EEgF1SrBmuEGeXVjB3ZwzqTfr?speed=1.5&autoplay=1)
 
 #### 注意事项
 - 命令行需要初始化 EDITOR 环境变量
