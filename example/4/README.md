@@ -8,6 +8,7 @@
 * [安装命令](#安装命令)
 * [基本操作](#基本操作)
 * [我的浏览习惯](#我的浏览习惯)
+* [如何添加 Feed demo](#如何添加-feed-demo)
 * [注意事项](#注意事项)
 
 <!-- vim-markdown-toc -->
@@ -49,8 +50,11 @@ brew install newsboat
 #### 我的浏览习惯
 1. 执行 `newsboat` 打开 feed 页
 2. 等待 feed(一个 feed 一般就是一个网站) 抓取. 结束后 `j` `k` 导航到想要看的 feed. `enter` 进入 feed
-3. 按 `O` 打开想读的文章并标记为已读. 如果想全部都打开并标记为已读. 会按 `G`. 如果所有的文章都没兴趣. 按 A 标记为已读而不打开. 如果有新的网站的 RSS 地址要添加. 按 `e` 调起编辑器. 将该网站的 RSS 地址黏贴到编辑器末尾新的一行(可以打上 [tag](https://wiki.archlinux.org/index.php/Newsboat#Tagging_feeds))并退出即可( Newsboat 会自动加载并抓起内容)
+3. 按 `O` 打开想读的文章并标记为已读. 如果想全部都打开并标记为已读, 会按 `G` 如果所有的文章都没兴趣, 按 A 标记为已读而不打开 如果有新的网站的 RSS 地址要添加, 按 `E` 调起编辑器, 将该网站的 RSS 地址黏贴到编辑器末尾新的一行(可以打上 [tag](https://wiki.archlinux.org/index.php/Newsboat#Tagging_feeds))保存并退出即可( Newsboat 会自动加载并抓取内容, 下面的 demo)
 4. 按 `q` 退出 `newsboat`
+
+#### 如何添加 Feed demo
+[![asciicast](https://asciinema.org/a/HsoI4YJ2UI91qXGRfpvk7kcLk.svg)](https://asciinema.org/a/HsoI4YJ2UI91qXGRfpvk7kcLk?t=1&autoplay=1)
 
 #### 注意事项
 - 命令行需要初始化 EDITOR 环境变量
