@@ -8,6 +8,7 @@
 #### 未分类
 - [make 和 Makefile](./example/1/)
 - [我的 RSS 订阅习惯](./example/4/)
+- [基于 SSH 的国内服务器加速访问国外网站的方案](./example/5)
 
 # RSS 订阅
 - [订阅地址](https://github.com/jinmiaoluo/blog/commits/main.atom)
