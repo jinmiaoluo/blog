@@ -27,4 +27,4 @@ export https_proxy="http://127.0.0.1:19090"
 
 使用了代理和未使用代理速度对比:
 
-[![asciicast](https://asciinema.org/a/1pKbh06SlM1vu9g0OF68EJa9z.svg)](https://asciinema.org/a/1pKbh06SlM1vu9g0OF68EJa9z?autoplay=1&t=3)
+[![asciicast](https://asciinema.org/a/01MTbNo7b8uSIHbFxq8Wu9jW8.svg)](https://asciinema.org/a/01MTbNo7b8uSIHbFxq8Wu9jW8?autoplay=1&t=3)
