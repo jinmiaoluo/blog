@@ -1,0 +1,22 @@
+all: 1 2 3
+
+.PHONY: 1 2 3 target1 target2
+
+
+1:
+	@echo $@
+# output:
+# 1
+# 表示目标的名字
+
+2: target1 target2
+	@echo $^
+# output:
+# target1 target2
+# 表示所有准备条件的名字, 如果有多个用空格隔开
+
+3: target1 target2
+	@echo $<
+# output:
+# target1
+# 表示第一个准备条件的名字

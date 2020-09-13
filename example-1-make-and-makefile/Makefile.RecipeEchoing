@@ -1,0 +1,15 @@
+.PHONY: all 1 2
+
+all: 1 2
+
+1:
+	@echo hello
+# output:
+# hello
+
+2:
+	echo hi
+# output:
+# echo hi
+# hi
+# make 会先打印命令 `echo hi`, 再打印结果 `hi`. 我们只想打印结果, 因此要加 @ 符号

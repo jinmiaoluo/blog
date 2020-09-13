@@ -1,0 +1,15 @@
+# 1 是默认的 `%: common-%` 的值
+1::
+
+# 如果把上面的 `1::` 注释掉, 然后再执行 `make -f Makefile.DoubleColon02` 也有效, 因此双引号在模式匹配默认值场景下的作用并不明显, 因为可以用单引号替代.
+2:
+
+%: common-% ;
+
+.PHONY: common-1
+common-1:
+	@echo from common-1
+
+.PHONY: common-2
+common-2:
+	@echo from common-2

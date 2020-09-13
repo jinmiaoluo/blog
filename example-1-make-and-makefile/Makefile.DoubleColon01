@@ -1,0 +1,20 @@
+.PHONY: all 1
+default: 1 2
+
+1:: abc.c
+	@echo goal 1 with double colons with abc.f
+1:: def.c
+	@echo goal 1 with double colons with def.c
+# output:
+# goal 1 with double colons with abc.f
+# goal 1 with double colons with def.c
+
+
+2: abc.c
+	@echo goal 2 with double colons with abc.c
+2: def.c
+	@echo goal 2 with double colons with def.c
+# output:
+# Makefile.DoubleColon:15: warning: overriding recipe for target '2'
+# Makefile.DoubleColon:12: warning: ignoring old recipe for target '2'
+# goal 2 with double colons with def.c
