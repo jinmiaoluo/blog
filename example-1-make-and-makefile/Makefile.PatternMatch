@@ -1,0 +1,34 @@
+# all 将作为模式匹配的值进行后面的模式匹配
+all::
+
+# 模式匹配的规则
+%: common-% ;
+
+# 匹配了 `common-all`
+.PHONY: common-all
+common-all: precheck style test # 后面的这些目标将继续进行匹配
+
+# 被忽略
+.PHONY: common-style
+common-style:
+	@echo ">> checking common code style"
+
+# style 完全匹配, 优先级更高, 因此导致上面的 `goal` 被忽略
+.PHONY: style
+style:
+	@echo ">> checking code style"
+
+# 同理, precheck 完全匹配, 导致下面的 `common-precheck` 被忽略
+.PHONY: precheck
+precheck:
+	@echo ">> prechecking"
+
+# 被忽略了
+.PHONY: common-precheck
+common-precheck:
+	@echo ">> common prechecking"
+
+# 由于不存在 `test` 这个 `goal`, 因此通过模式匹配匹配到了 `common-test`
+.PHONY: common-test
+common-test:
+	@echo ">> common testing"
