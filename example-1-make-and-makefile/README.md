@@ -1,5 +1,5 @@
 # Makefile
-Makefile 是告诉 make 这个工具如何编译和链接应用程序的文件. 自动化工具
+Makefile 是告诉 make 这个工具如何编译和链接应用程序的文件. 自动化工具.
 
 文中涉及到的 `Makefile` 开头的文件, 建议打开文件查看, 文中将包含作用的备注, 和执行后的输出. 另外, 请在一个 `terminal` 窗口内执行一下, 查看具体的效果.
 
@@ -10,19 +10,19 @@ target: prerequisites
 	...
 ```
 
-`target` 目标. 在满足 `prerequisites` 条件下, 用于指定执行 `recipe` 后生成的结果文件的名字. 如果 `target` 指定的文件存在, 且比 `prerequisites` 要新. 则 `recipe` 不会被执行
+`target` 目标. 在满足 `prerequisites` 条件下, 用于指定执行 `recipe` 后生成的结果文件的名字. 如果 `target` 指定的文件存在, 且比 `prerequisites` 要新. 则 `recipe` 不会被执行.
 
-`recipe` 清单. 是一些 shell 脚本. 就是动作. 如何处理源码文件生成 `target` 中指定的文件
+`recipe` 清单. 是一些 shell 脚本. 就是动作. 如何处理源码文件生成 `target` 中指定的文件.
 
-`prerequisites` 准备条件. 是一些源码文件或者其他 `target`
+`prerequisites` 准备条件. 是一些源码文件或者其他 `target`.
 
-`recipe` 必须以指定的开头符号开头. 比如默认的是 `tab` 开头. 所以每条 `recipe` 需要用 `tab` 开头
+`recipe` 必须以指定的开头符号开头. 比如默认的是 `tab` 开头. 所以每条 `recipe` 需要用 `tab` 开头.
 
 
 #### `Target` 和 `Phony Target` 假目标
-`target` 常用于指定 make 命令的参数. 比如 `make all`
+`target` 常用于指定 make 命令的参数. 比如 `make all`.
 
-`phony target` 用于避免文件名和 `target` 名冲突导致的 `recipe` 不执行问题. 见官方文档: [4.6 Phony Targets](https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html)
+`phony target` 用于避免文件名和 `target` 名冲突导致的 `recipe` 不执行问题. 见官方文档: [4.6 Phony Targets](https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html).
 
 示例(不含`phony target`):
 ```make
@@ -42,7 +42,7 @@ frpc:
 ```
 
 #### `make` 的执行顺序
-默认(执行 `make` 不带任何参数)以第一个不是`.`开头的 `target` 开始执行. 这个 `target` 被称为 `goal`. Makefile  最终目的是完成 `goal` 指定的行为
+默认(执行 `make` 不带任何参数)以第一个不是`.`开头的 `target` 开始执行. 这个 `target` 被称为 `goal`. Makefile  最终目的是完成 `goal` 指定的行为.
 
 #### `goal` 的调用
 `goal` 是由其他 `target` 组成的 `target`. 比如:
@@ -63,7 +63,7 @@ frpc:
 	go build -o bin/frpc ./cmd/frpc
 ```
 
-`all` 这个`goal` 由 `fmt` `build` 这两个 `target` 组成. `build` 这个 `target` 又 由 `frps` 和 `frpc` 这两个 `target` 组成, 所以最后执行的事情就是执行 fmt frps frpc 中的 `recipe` 规则了
+`all` 这个`goal` 由 `fmt` `build` 这两个 `target` 组成. `build` 这个 `target` 又 由 `frps` 和 `frpc` 这两个 `target` 组成, 所以最后执行的事情就是执行 fmt frps frpc 中的 `recipe` 规则了.
 
 #### `@Command` 用法
 > When @ is used at the very beginning of a recipe (command) line, just after
@@ -77,7 +77,6 @@ frpc:
 ```bash
 make -f Makefile.RecipeEchoing
 ```
-
 
 #### `target` 下 `prerequisites` 和 `recipe` 的执行顺序
 ```
@@ -103,10 +102,10 @@ hugo-themes:
 	rm -rf themes/hugo-theme-learn/.git
 ```
 
-`hugo-build` target consists of a recipe and some prerequisites. the order is prerequisites first, and then execute recipe
+`hugo-build` target consists of a recipe and some prerequisites. the order is prerequisites first, and then execute recipe.
 
 #### `$$Variable` 的作用
-在 Makefile 有时会看到 `$$` 开头的变量, 因为 `$` 在 Makefile 内有特殊含义, 因此 `$$Variable` 表示的其实是 Bash 环境下的 `$Variable`, 即 bash 脚本调用环境变量的意思
+在 Makefile 有时会看到 `$$` 开头的变量, 因为 `$` 在 Makefile 内有特殊含义, 因此 `$$Variable` 表示的其实是 Bash 环境下的 `$Variable`, 即 bash 脚本调用环境变量的意思.
 
 #### 如何避免 `target` 被重复执行
 
