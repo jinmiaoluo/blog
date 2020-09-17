@@ -1,6 +1,7 @@
 # Makefile
 Makefile 是告诉 make 这个工具如何编译和链接应用程序的文件. 自动化工具
 
+文中涉及到的 `Makefile` 开头的文件, 建议打开文件查看, 文中将包含作用的备注, 和执行后的输出. 另外, 请在一个 `terminal` 窗口内执行一下, 查看具体的效果.
 
 #### Makefile 格式
 ```
@@ -39,7 +40,6 @@ frps:
 frpc:
 	go build -o bin/frpc ./cmd/frpc
 ```
-
 
 #### `make` 的执行顺序
 默认(执行 `make` 不带任何参数)以第一个不是`.`开头的 `target` 开始执行. 这个 `target` 被称为 `goal`. Makefile  最终目的是完成 `goal` 指定的行为
@@ -224,13 +224,37 @@ common-test:
 #  >> common testing
 ```
 
-- `all::` 是一个双冒号 `goal`, 用于传给 `%: common-% ;` 这个模式匹配规则作为默认值
-- `%: common-% ;` 是 `pattern match`(模式匹配规则), 用于匹配 `goal`
+- `all::` 是一个双冒号 `goal`, 用于传给 `%: common-% ;` 这个模式匹配规则作为默认值.
+- `%: common-% ;` 是 `pattern match`(模式匹配规则), 用于匹配 `goal`.
 
 具体的优先级, 可以看看 `Makefile.PatternMatch` 中的备注, 另外可以执行下面的命令查看效果:
 
 ```bash
 make -f Makefile.PatternMatch
+```
+
+#### 变量
+
+- 传统的做法是变量用大写字母.
+- 对于内部变量, 用小写字母.(比如准备条件中的多个文件, 多个目标).
+
+见 demo 文件中的备注:
+
+```bash
+make -f Makefile.Variables
+```
+
+# 多个目标作为构建结果的情况
+
+```bash
+make -f Makefile.Variables 5
+make -f Makefile.Variables 6
+```
+
+#### 有条件指令
+
+```bash
+make -f Makefile.ConditionDirective
 ```
 
 #### 参考

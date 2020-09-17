@@ -1,0 +1,95 @@
+# 变量声明放在最前面(为了方便阅读, 本文件内暂时不遵守这点)
+# 内部变量用小写字母(这里 targets 表示多个目标)
+targets = 1 2 3
+another-targets = 4 7 8 9
+# 内部变量用小写字母(这里 goals 表示多个构建结果)
+goals = 5 6
+
+# 伪目标, 这个目标没有对应的生成文件
+.PHONY: all
+
+# 默认的目标. make 命令在没有任何参数时将使用这个目标
+all: $(targets) $(another-targets)
+
+.PHONY: $(targets) $(goal) $(another-targets)
+
+1:
+	@echo target: $@ with output: $(targets)
+# output:
+# 1 2 3
+#
+# 解释:
+# targets 变量的值在 make 命令执行 Makefile 时被替换为对应的值了
+
+2:
+	@echo target: $@ with output: ${targets}
+# output:
+# 1 2 3
+#
+# 解释:
+# targets 变量也可以通过大括号引用
+
+# 外部变量用大写字母(Makefile 中的变量, 默认应该用大写)
+ECHO = echo
+3:
+	@$(ECHO) target: $@ with output: $(targets)
+# output:
+# 1 2 3
+#
+# 解释:
+# 默认变量应该用大写字母, 除非变量是用于内部. (比如准备条件中的多个文件, 多个目标)
+
+# 演示默认没有括号的情况
+c = 123
+4:
+	@echo target: $@ with output: $c456
+# output:
+# 123456
+#
+# 解释:
+# 如果没有大括号或者圆括号将变量包起来, 默认是第一个字符作为变量名, 剩下的(文中的 `456`) 将作为值
+
+$(goals):
+	@echo target: $@ with output: $@ # $@ 表示当前构建结果的名字
+# make -f Makefile.Variables 5
+# output: 5
+# make -f Makefile.Variables 6
+# output: 6
+
+# 演示 = 用法, 递归扩展性质演示
+A = $(B)
+B = $(C)
+C = hello world
+7:
+	@echo target: $@ with output: $(A)
+# output: hello world
+#
+# 解释: 默认 `=` 表示的变量的值是递归扩展的. 如果值部分包含其他变量, make 会先为被包含的变量求值, 以递归的形式, 直到确定最终变量的结果后, 返回递归结果, 最终 `=` 后被包含的变量也将被替换为对应的值. 这也是为什么 A 最终的值会是: hello world 的原因
+
+# 演示 := 用法
+D := hello
+E := $(D)
+F := world
+G := $(F)
+H := $(I)
+I := world
+8:
+	@echo target: $@-1 with output: $(E) $(G)
+	@echo target: $@-2 with output: $(E) $(H)
+# output:
+# hello world
+# hello
+#
+# 解释:
+# 简单扩展方式. $(E) 的值是 D 变量的值. D 在 E 之前定义. 所以 E 可以找到 D, 所以 $(E) 的值是 hello. `H := $(I)` 中, I 在 H 后面定义的, 因此, $(H) 的值是空
+
+# 演示 ?= 用法
+J = hello
+J ?= world
+K ?= world
+9:
+	@echo target: $@ with output: $(J) $(K)
+# output: hello world (而不是 world world)
+#
+# 解释:
+# ?= 的作用是有条件赋值. 只有在一个变量还没有被定义过时才能被赋值. J 因为已经被赋值为 hello. 因此 `J ?= world` 没有生效. 所以结果是 `hello world` 而不是 `world world`
