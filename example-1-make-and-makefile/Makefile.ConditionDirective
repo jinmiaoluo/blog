@@ -1,0 +1,53 @@
+# 本文为了阅读方便, 将不满足变量定义在最前面这一规范
+
+targets := 1 2 3 4
+.PHONY: all $(targets)
+all: $(targets)
+
+1:
+	@echo target: $@ with output:
+ifeq ($(CC), gcc)
+	@echo $(CC) is equal with gcc
+else
+	@echo $(CC) is not equal with gcc
+endif
+	@echo target: $@ finish
+
+control := hello world
+2:
+	@echo target: $@ with output:
+ifdef control
+	@echo target: $@ has define control variable with value: $(control)
+else
+	@echo target: $@ has not define control variable
+endif
+	@echo target: $@ finish
+# output:
+# target: 2 with output:
+# target: 2 has define control variable with value: hello world
+# target: 2 finish
+#
+# 解释: 如果定义了 control 且内容不为空, 则执行 else 前面这条. 否则执行 else 后面这条
+
+ifndef UNDEFINE1
+UNDEFINE1=hello world
+endif
+3:
+	@echo target: $@ with output: $(UNDEFINE1)
+	@echo target: $@ finish
+4:
+ifndef UNDEFINE2
+	@echo target: $@ has not define variable UNDEFINE2
+else
+	@echo target: $@ has define UNDEFINE2 variable with value: $(UNDEFINE2)
+endif
+	@echo target: $@ finish
+# output:
+# target: 3 with output: hello world
+# target: 3 finish
+# target: 4 has not define variable UNDEFINE2
+# target: 4 finish
+#
+# 解释:
+# 如果没有定义 UNDEFINE1 或者 UNDEFINE1 的值为空, 则将 UNDEFINE1 的值复制为 hello world
+# 如果没有定义 UNDEFINE2 或者 UNDEFINE2 的值为空, 则执行 else 前面这条. 否则执行 else 后面这条
