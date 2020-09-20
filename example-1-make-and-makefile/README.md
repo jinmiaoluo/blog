@@ -243,7 +243,7 @@ make -f Makefile.PatternMatch
 make -f Makefile.Variables
 ```
 
-# 多个目标作为构建结果的情况
+#### 多个目标作为构建结果的情况
 
 ```bash
 make -f Makefile.Variables 5
