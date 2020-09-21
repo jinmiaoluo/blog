@@ -104,8 +104,18 @@ hugo-themes:
 
 `hugo-build` target consists of a recipe and some prerequisites. the order is prerequisites first, and then execute recipe.
 
-#### `$$Variable` 的作用
-在 Makefile 有时会看到 `$$` 开头的变量, 因为 `$` 在 Makefile 内有特殊含义, 因此 `$$Variable` 表示的其实是 Bash 环境下的 `$Variable`, 即 bash 脚本调用环境变量的意思.
+#### `$$` 的作用
+
+在 Makefile 有时会看到 `$$` 开头的用法, 比如 `$${var}`, 因为 `$` 在 Makefile 内有特殊含义, 因此 `$${var}` 表示的其实是 shell 环境下的 `${var}`, 即 shell 脚本调用变量的意思.
+
+`$$()` 同理. 表示的是 shell 环境下的 `$()`. 即捕获 shell 脚本的返回值作为结果的字符串的意思.
+
+见 demo 结果和里面的备注:
+
+```bash
+export variable=123
+make -f Makefile.DoubleDollarSign
+```
 
 #### 如何避免 `target` 被重复执行
 
@@ -254,6 +264,14 @@ make -f Makefile.Variables 6
 
 ```bash
 make -f Makefile.ConditionDirective
+```
+
+#### 函数
+
+函数调用类似于变量调用. 函数调用会在函数名和参数间用空格隔开.
+
+```bash
+make -f Makefile.Functions
 ```
 
 #### 参考
