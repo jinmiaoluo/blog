@@ -1,0 +1,128 @@
+eval := eval-1 eval-2 eval-3
+targets := shell wildcard-and-patsubst call foreach $(eval) subst addsuffix firstword lastword
+
+.PHONY: ALL $(targets)
+ALL: $(targets)
+
+
+shell:
+	@echo target $@ with output: $(shell echo *.c)
+# output:
+# abc.c def.c
+#
+# 解释: shell 函数会将后面的参数作为命令执行. 然后将返回值作为填充的值
+# 因此, 最终执行的命令是: `@echo abc.c def.c`
+# 因此, 结果是 abc.c def.c
+
+files := $(wildcard *.c)
+wildcard-and-patsubst:
+	@echo target $@-1 with output: $(files)
+	@echo target $@-2 with output: $(patsubst %.c,%.o,$(wildcard *.c))
+# output:
+# abc.c def.c
+# abc.o def.o
+#
+# 解释: wildcard 函数将匹配对应规则的文件来形成空格隔开的文件名的字符串来返回.
+# 常见的用法有两种:
+# wildcard-and-patsubst-1 中 wildcard 作为变量的值
+# wildcard-and-patsubst-2 中 wildcard 作为其他函数的参数
+#
+# wildcard-and-patsubst-1 最终执行的命令是: `@echo abc.c def.c`结果是 abc.c def.c. 这个结果跟 shell 函数的 demo 的效果相当
+# wildcard-and-patsubst-2 patsubst 函数将参数 3 中的文件名字符串(空格隔开的). 将每一个文件名从 `.c` 改为 `.o`. 起到匹配和替换的目的
+
+reverse = $(2) $(1)
+call:
+	@echo target $@ with output: $(call reverse,world,hello)
+# output:
+# hello world
+#
+# 解释:
+# call 函数的格式是 `$(call variable,param,param,…)`.
+# 这里面 `$(1)` `$(2)` 代表 `param` 中的第一个和第二个.
+# `varaible` 中含有 `$(1)` `$(2)` 这些临时变量.
+# `call` 做的事是将 `variable` 中的临时变量替换为对应的 `param` 的值. 然后将 `variable` 中的值作为字符串返回.
+# 所以这里的输出是: `hello world`
+# call 函数常用于构建带参数的函数. 一般会结合 eval 函数使用. 见下面的 eval 函数的 demo
+
+dirs := a b
+files := $(foreach dir,$(dirs),$(wildcard $(dir)/*))
+foreach:
+	@echo target $@ with output: $(files)
+# output:
+# a/1 b/2
+#
+# 解释:
+# dirs 变量内存放了两个文件夹的名字 a 和 b. foreach 会以空格作为分隔符,
+# 分多次读取 dirs 中的值, 并把每次读到的值赋值给 dir. 这里因为有两个值(a 和 b).
+# 所以. 第一次执行的时候, dir 的值是 a. 然后执行 `$(wildcard $(dir)/*)`.
+# 因为已知 dir 的值是 a. 所以有: `$(wildcard a/*)`. 第一次的输出是: a/1
+# 同理有第二次的输出: b/2. 两次输出以空格作为分隔.
+# 所以有结果: a/1 b/2
+define template1
+eval-1:
+	@echo target eval-1 with output: $(1) $(2)
+endef
+$(eval $(call template1,hello,world))
+# output:
+# hello world
+#
+# 解释: eval 第一种用法, 作为模板
+
+define template2
+EVAL-VARIABLE1 = $(1)
+EVAL-VARIABLE2 = $(2)
+endef
+$(eval $(call template2,hello,world))
+eval-2:
+	@echo target $@ with output: $(EVAL-VARIABLE1) $(EVAL-VARIABLE2)
+# output:
+# hello world
+#
+# 解释: 初始化变量
+
+define ls
+LS = $(shell ls $(1) c/)
+endef
+$(eval $(call ls,-s))
+eval-3:
+	@echo target $@ with output: $(LS)
+# output:
+# total 0 0 hello-world
+#
+# 解释:
+# 我们定制了 shell 函数的参数. 并通过 LS 作为回传的结果.
+
+subst:
+	@echo target $@ with output: $(subst i,o,helli wirld)
+# output:
+# hello world
+#
+# 解释:
+# $(subst from,to,text)
+# 将 text 中的所有 from 替换为 to 上的值
+
+addsuffix:
+	@echo target $@ with output: $(addsuffix .c,a b)
+# output:
+# a.c b.c
+#
+# 解释:
+# $(addsuffix suffix,names…)
+
+firstword:
+	@echo target $@ with output: $(firstword hello world)
+# output:
+# hello
+#
+# 解释:
+# $(firstword names…)
+# names 中以空格为分隔符分隔了多个成员. 输出第一个成员
+
+lastword:
+	@echo target $@ with output: $(lastword hello world)
+# output:
+# world
+#
+# 解释:
+# $(firstword names…)
+# names 中以空格为分隔符分隔了多个成员. 输出最后一个成员

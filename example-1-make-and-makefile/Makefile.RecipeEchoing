@@ -1,13 +1,17 @@
-.PHONY: all 1 2
+.PHONY: all withAt seperator witoutAt
 
-all: 1 2
+all: withAt seperator withoutAt
 
-1:
-	@echo hello
+withAt:
+	@echo hi
 # output:
-# hello
+# hi
 
-2:
+seperator:
+	@echo --------------------------------
+# 这个 target 起到分割的目的
+
+withoutAt:
 	echo hi
 # output:
 # echo hi

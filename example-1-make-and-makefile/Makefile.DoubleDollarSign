@@ -1,0 +1,20 @@
+targets = shell-variables shell-capture-command-output
+
+.PHONY: ALL $(targets)
+ALL: $(targets)
+
+shell-variables:
+	@echo $${variable}
+# output:
+# 123
+#
+# 解释:
+# 因为我们执行了 `export variable=123`. 所以结果是: 123
+
+shell-capture-command-output:
+	@echo $$(ls *.c)
+# output:
+# abc.c def.c
+#
+# 解释:
+# 因为命令行下 `ls *.c` 结果是 abc.c def.c. 所以这里的输出是: abc.c def.c
