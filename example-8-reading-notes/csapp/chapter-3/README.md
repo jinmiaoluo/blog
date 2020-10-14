@@ -110,3 +110,216 @@ PS:
 - 为什么 xorq %rdx %rdx 和 movl $0 %edx 可以实现置 0 效果
   - 前者: 因为 0 ^ 0 = 0
   - 后者: 因为 x86-64 有如下规定, 当出现 32 寄存器的写操作时, 寄存器的高 32 位会被置0.
+
+#### 机器代码如何实现流程控制
+
+条件码寄存器: 描述最近的算术指令或者逻辑指令的属性的寄存器(寄存器上的每个二进制位, 表示一种状态, 我们叫这些比特位为条件码, 条件码被置为0或者1时, 表示对应的两种状态).
+
+条件码寄存器(寄存器名字: FLAGS)有 16 bits. 在保证标志位兼容的情况下(条件寄存器的第几个比特位表示特定的含义, 这个位置关系不变), 还有 EFLAGS (32 bits) 条件码寄存器, RFLAGS (64 bits) 寄存器.
+
+条件码和对应的含义(这里只讨论4个使用最频繁的条件码):
+
+![condition-codes.png](condition-codes.png)
+
+标志寄存器会被一些逻辑类的指令, 比如 cmp 和 test 用到. 比如在 test 指令下, 多个标志位的**组合使用**, 可以判断一个寄存器里面的值是正数还是负数还是0.
+
+下面概述一下几个常见的标志位
+- CF: 进位标识符. 发生算术运算上的进位或者减法的被减数借位时. 标志位会被置为 1. <!-- todo: 需要更进一步的查看文档 -->
+- ZF: 零标识符. 可以认为是目标操作数减去源操作数(sub 指令, 但得到的结果不会保存到目标操作数中, 只更新标志位). 如果差值位0, 则 ZF 会被置为1. 反之亦然.(有些指令不是做减法, 而是做逻辑 AND).
+- SF: 符号位标识符. 如果符号位的 AND 结果位0, 则 SF 标志位会被置位1. 反之亦然.
+- OF: 溢出标识符. 符号位如果发生了变化. OF 被置为 1. 反之亦然.
+
+PS:
+
+- 除了 leaq 指令, 其他的算术指令都会更新条件码寄存器.
+- cmp 和 test 类指令只设置条件码寄存器, 但不会更新目的寄存器里面的内容.
+  - cmp 用于比较, 根据两个操作数之差, 如果两个操作数相等, ZF 置为 1. 否则 ZF 为 0. 其他标置为用于记录大小关系.
+  - test 用于类似与 AND. 只是不会更新目的寄存器里面的内容.
+
+![comparison-and-test-instructions.png](comparison-and-test-instructions.png)
+
+set 类指令:
+
+![the-set-instructions.png](the-set-instructions.png)
+
+jump 类指令:
+
+![the-jump-instructions.png](the-jump-instructions.png)
+
+Q: 汇编如何判断一个数是正数, 负数, 0?
+
+A:
+
+- TEST %rcx %rcx
+- 正数
+  - 符号位 AND 结果位 0. SF 位 1.
+- 负数
+  - 符号位 AND 结果位 1. SF 位 0.
+- 0
+  - 做 `%rcx AND %rcx` 的操作. 算术结果为 0. ZF 位 1. 因此, ZF 为 1 时 `TEST %rcx %rcx` 为 0.
+
+#### golang 多返回值
+
+```bash
+go build --gcflags '-N -L' multiple-return-values.go
+gdb multiple-return-values
+
+# 在 gdb shell 内执行
+# break multiple-return-values.go:16
+# run
+# layout split
+```
+
+golang 不像 c. golang 支持多返回值. 返回值被保存在调用方的栈内.
+
+#### 机器代码如何实现循环
+
+do while loop 实现:
+
+```asm
+	.file	"pcount_do.c"
+	.text
+	.globl	pcount_do
+	.type	pcount_do, @function
+pcount_do:
+.LFB0:
+	.cfi_startproc
+	movl	$0, %eax
+.L2:
+	movq	%rdi, %rdx
+	andl	$1, %edx
+	addq	%rdx, %rax
+	shrq	%rdi
+	jne	.L2
+	ret
+	.cfi_endproc
+.LFE0:
+	.size	pcount_do, .-pcount_do
+	.ident	"GCC: (GNU) 10.2.0"
+	.section	.note.GNU-stack,"",@progbits
+```
+
+可以看到. 这里通过 `.L2` 和 `jne` 指令实现了循环跳转. 通过判断 `shrq` 指令的结果是否设置了 `ZF` 来解决是否退出循环. 如果 `shrq` 计算结果为 0. 此时 `ZF` 表示为 1. 不满足 `jne` 指令的执行条件(执行条件是: ZF=0. 见末尾intel的参考文档). 就退出循环了.
+
+
+for loop 实现:
+
+```asm
+	.file	"pcount_for.c"
+	.text
+	.globl	pcount_for
+	.type	pcount_for, @function
+pcount_for:
+.LFB0:
+	.cfi_startproc
+	movl	$0, %edx
+	movl	$0, %ecx
+	jmp	.L2
+.L3:
+	movq	%rdi, %rax
+	shrq	%cl, %rax
+	andl	$1, %eax
+	addq	%rax, %rdx
+	addq	$1, %rcx
+.L2:
+	cmpq	$31, %rcx
+	jbe	.L3
+	movq	%rdx, %rax
+	ret
+	.cfi_endproc
+.LFE0:
+	.size	pcount_for, .-pcount_for
+	.ident	"GCC: (GNU) 10.2.0"
+	.section	.note.GNU-stack,"",@progbits
+
+```
+
+while loop 实现:
+
+```asm
+	.file	"pcount_while.c"
+	.text
+	.globl	pcount_while
+	.type	pcount_while, @function
+pcount_while:
+.LFB0:
+	.cfi_startproc
+	movl	$0, %eax
+	jmp	.L2
+.L3:
+	movq	%rdi, %rdx
+	andl	$1, %edx
+	addq	%rdx, %rax
+	shrq	%rdi
+.L2:
+	testq	%rdi, %rdi
+	jne	.L3
+	ret
+	.cfi_endproc
+.LFE0:
+	.size	pcount_while, .-pcount_while
+	.ident	"GCC: (GNU) 10.2.0"
+	.section	.note.GNU-stack,"",@progbits
+```
+
+这是对 while loop 的解析: 为了实现类似先判断再执行代码的逻辑. 相对 do while loop 多加了一个跳转. 也就是 `jmp .L2`. 并在 `.L2` 标号内实现了判断. 如果 `%rdi` 的值不为0. 则 `testq` 就不会设置 `ZF` 为 1. `ZF` 的值就为默认的 0. `jne` 在 `ZF` 为 0 时满足条件. 因此会跳到 `.L3`. 实现循环.
+
+for loop 本质上跟 while loop 是一样的. 只是初始条件. 判断条件. 更新条件. 逻辑代码主体在 c 代码中的风格(以及位置)不同而已.
+
+#### 机器代码如何实现多重分支
+
+方案1(只用于简单计算):
+
+使用 CMOVcc 指令. CMOVcc 指令全程是 Conditional Move 指令. 思路是把所有分支的代码都执行一遍. 然后在末尾做一次条件判断和 CMOVcc. 通过条件判断. 从而确定返回值对应的寄存器, 应该存入那个值.
+
+<!-- todo: 添加 demo code -->
+
+方案2(常用方案):
+
+通过 Jcc 系列指令和标号(LABEL). 通过标号标记一段指令的结束和另外一段指令的开始. 然后条件判断指令和 Jcc 实现有条件的跳转.
+
+<!-- todo: 添加 demo code -->
+
+#### 如何实现 C 多重分支(Switch)
+
+switch 有两种实现思路. 一种是按照线性的方式. 这适用于分散的 case 的比较, 可以理解为多个 if-else 的组合. 另外一种是通过跳转表. 跳转表可以实现 O(1) 的复杂度的 case 查找. 但前提是需要 case 的数据是连续而密集. 从而避免过度的空间开销.
+
+<!-- todo: jump table 原理 -->
+
+#### golang 如何处理参数
+
+参数存放到调用者的栈上, 以相对于 %rsp 的内存取址方式来访问
+
+```gdb
+gdb multiple-arguments
+
+# 在 gdb shell 内执行
+# break main.main
+# run
+# layout split
+# nexti
+```
+
+#### 如何判断 IP 是否属于一个网段
+
+假设:
+- 网段是: 10.0.0.1/27
+- IP 是: 10.0.0.21
+
+1. 10.0.0.1 解析字符串为 32位无符号整数 a(二进制格式)
+2. 生成 27 为掩码的32位无符号整数 m(二进制格式)
+3. 做a AND m得到一个32位无符号整数 r1(二进制格式)
+4. 解析 10.0.0.21 字符串为32位无符号整数 b(二进制格式)
+5. 做b AND m得到一个32位无符号整数 r2(二进制格式)
+6. 做 r1 XOR r2. 如果结果为 0. CPU 状态寄存器的 ZF 置 1. 此时, CPU 只要判断该寄存器的 ZF 位是否为 1, 既可确定 b 对应的IP是否属于该网段.
+
+#### FAQ:
+
+Q: 如何查阅指令文档.
+
+A: AMD & Intel 二者都提供了 ISA 的文档. 见参考. 可以在 TOC 内找到指令后跳转即可.
+
+#### 参考
+- [条件码寄存器-维基百科](https://en.wikipedia.org/wiki/FLAGS_register)
+- [Intel ISA reference](https://software.intel.com/content/dam/develop/public/us/en/documents/325462-sdm-vol-1-2abcd-3abcd.pdf)
+- [AMD ISA reference](https://www.amd.com/system/files/TechDocs/40332.pdf)
