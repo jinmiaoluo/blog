@@ -4,10 +4,62 @@ CS:APP 学习过程记录
 
 文中的插图出自 Computer Systems: A Programmer's Perspective, 3/E (CS:APP3e). 版权归原作者所有.
 
+#### 目录
+
+<!-- vim-markdown-toc GFM -->
+
+* [词汇汇总](#词汇汇总)
+* [两种汇编格式间的差异](#两种汇编格式间的差异)
+* [如何在 C 中调用汇编](#如何在-c-中调用汇编)
+* [汇编指令中的后缀的含义](#汇编指令中的后缀的含义)
+* [常见整数寄存器作用概述](#常见整数寄存器作用概述)
+* [精简指令集和复杂指令集的区别](#精简指令集和复杂指令集的区别)
+* [如何读懂 ATT 汇编](#如何读懂-att-汇编)
+* [栈顶和栈底在虚拟地址空间里的特性](#栈顶和栈底在虚拟地址空间里的特性)
+* [mov 指令后缀与高位填充](#mov-指令后缀与高位填充)
+* [机器代码如何实现算术运算](#机器代码如何实现算术运算)
+* [机器代码如何实现流程控制](#机器代码如何实现流程控制)
+* [golang 多返回值](#golang-多返回值)
+* [机器代码如何实现循环](#机器代码如何实现循环)
+* [机器代码如何实现多重分支](#机器代码如何实现多重分支)
+* [如何实现 C 多重分支(Switch)](#如何实现-c-多重分支switch)
+* [golang 如何处理参数](#golang-如何处理参数)
+* [如何判断 IP 是否属于一个网段](#如何判断-ip-是否属于一个网段)
+* [递归的思路](#递归的思路)
+* [复合结构为什么需要进行内存重排](#复合结构为什么需要进行内存重排)
+* [汇编如何实现可变参数的函数](#汇编如何实现可变参数的函数)
+* [SIMD 有什么用](#simd-有什么用)
+* [SIMD 如何实现这个作用的](#simd-如何实现这个作用的)
+* [锁和原子性是通过什么指令实现的](#锁和原子性是通过什么指令实现的)
+* [CPU 如何做上下文切换](#cpu-如何做上下文切换)
+* [为什么线程切换比进程切换更快](#为什么线程切换比进程切换更快)
+* [PCB 存放在哪里](#pcb-存放在哪里)
+* [CPU 如何访问和管理内存](#cpu-如何访问和管理内存)
+* [FAQ:](#faq)
+* [参考](#参考)
+
+<!-- vim-markdown-toc -->
+
 #### 词汇汇总
 - ISA(Instruction Set Architecture): 指令集架构. 定义了处理器的状态. 指令的格式. 指令对状态的影响.
-- PC(Program counter): 程序计数器. 是寄存器中的一种. 表示当前正在执行的指令的地址.指示计算机在其程序序列中的位置.
+- PC(Program Counter): 程序计数器. 是寄存器中的一种. 表示当前正在执行的指令的地址.指示计算机在其程序序列中的位置. 在过程调用中, 通过改变 PC 寄存器的地址. 可以实现调用和函数返回的逻辑.
 - ASM(Assembly): 汇编
+- PCB(Process Control Block): also known as a process descriptor. 用于存储进程的上下文信息. 最终保存到指定的内存区域.
+- SIMD(Single instruction, multiple data): 是一种分类(描述的这个分类的功能), 可以实现一条指令同时处理多个数据.
+- SSE(Streaming SIMD Extensions): 是一套指令集. 含70条新指令, 这些指令具备 SIMD 特性.
+- AVX(Advanced Vector Extensions): SSE 升级版, 比如: AVX AVX2 AVX-512.
+- XMM registers: 用于 SSE 的寄存器. 128 bits.
+- YMM registers: 用于 AVX 的寄存器. 256 bits.
+- ZMM registers: 用于 AVX-512 的寄存器. 512 bits.
+- Memory barrier: 内存屏障(内存栅栏). 用于实现并发变成里面的锁, 确保并发编程中内存读写的一致性.
+- PTE(Page Table Entry): todo
+- TLB(Translation Lookaside Buffer): todo
+- TSS(task state segment): todo
+- GDT(global descriptor table): todo
+- LDT(local descriptor table): todo
+- TR(task register): todo
+- IDT/IVT(interrupt descriptor table): In the 8086 processor, the interrupt table is called IVT (interrupt vector table). 包含了 interrupt 到 ISR 的映射.
+- ISR(interrupt service routine): is a special block of code associated with a specific interrupt condition. such as system call.
 
 #### 两种汇编格式间的差异
 
@@ -313,13 +365,70 @@ gdb multiple-arguments
 5. 做b AND m得到一个32位无符号整数 r2(二进制格式)
 6. 做 r1 XOR r2. 如果结果为 0. CPU 状态寄存器的 ZF 置 1. 此时, CPU 只要判断该寄存器的 ZF 位是否为 1, 既可确定 b 对应的IP是否属于该网段.
 
+#### 递归的思路
+
+<!-- todo -->
+
+#### 复合结构为什么需要进行内存重排
+
+<!-- todo -->
+
+#### 汇编如何实现可变参数的函数
+
+<!-- todo -->
+
+#### SIMD 有什么用
+
+<!-- todo -->
+
+#### SIMD 如何实现这个作用的
+
+<!-- todo -->
+
+#### 锁和原子性是通过什么指令实现的
+
+在 x86-64 中存在内存屏障类的指令, 如下:
+
+- lfense: load fence. 只针对 load-from-memory 操作相关的指令, 确保在这个指令之前的所有 load-from-memory 操作相关的指令都结束后, 才能执行 lfense 这个指令, 并确保 lfense 指令结束后, 后面的 load-from-memory 操作相关的指令才会被执行.
+- sfense: store fence. 只针对 store-to-memory 操作相关的指令, 确保 sfence 指令之前的所有 store-to-memory 指令对应的数据已经是 globally visible 的了(可以理解为已经写入内存). 然后才能执行 sfence 后面任何 store-to-memory 相关的指令(换句话说, sfence 只对 store-to-memory 操作相关的指令生效).
+- mfense: memory fence. 对所有 load-from-memory 和 store-to-memory 操作相关的指令有效. 相当于同时使用前面两个指令.
+
+这些指令的作用. 可以在 intel 提供的指令文档内找到(见: reference).
+
+#### CPU 如何做上下文切换
+
+为了实现并发效果. CPU 会通过上下文切换, 实现不同的进程同时运行的假象. 旧进程的状态会被保存为 PCB(并存放到特定的内存区域), 这里保存的信息包括通用寄存器中的数据, 特殊寄存器(比如 SP BP AX 等特殊寄存器)中的数据, PC (program counter) 中的数据, 内存地址空间中的数据等. 然后从 ready queue 里面选择下一个需要执行的进程, 加载该进程的 PCB.
+
+#### 为什么线程切换比进程切换更快
+
+因为线程是复用进程的内存地址空间的. 而不同的进程, 内存地址空间是不同的. 进程切换需要将内存地址空间内的数据保存到 PCB. 而线程切换, 因为复用的是同一个进程的内存地址空间, 减少了内存操作, 更轻巧. 成本更低, 所以更快.
+
+#### PCB 存放在哪里
+
+存放到了指定的内存区域. 该区域可以是内核指定的. 也可以是系统指定的.
+
+#### CPU 如何访问和管理内存
+
+<!-- todo -->
+
 #### FAQ:
 
 Q: 如何查阅指令文档.
 
 A: AMD & Intel 二者都提供了 ISA 的文档. 见参考. 可以在 TOC 内找到指令后跳转即可.
 
+Q: `leaq 8(%rsp) %rdi` 表示的含义
+
+A: leaq 类似于 C 中的 `&` 符号. 这里的作用是将 `8(%rsp)` 的地址存到 %rdi.
+
 #### 参考
 - [条件码寄存器-维基百科](https://en.wikipedia.org/wiki/FLAGS_register)
 - [Intel ISA reference](https://software.intel.com/content/dam/develop/public/us/en/documents/325462-sdm-vol-1-2abcd-3abcd.pdf)
 - [AMD ISA reference](https://www.amd.com/system/files/TechDocs/40332.pdf)
+- [德州大學 James Bornholt: 内存模型](https://www.cs.utexas.edu/~bornholt/post/memory-models.html)
+- [饶全成: 曹大谈内存重排](https://qcrao.com/2019/06/17/cch-says-memory-reorder/)
+- [Streaming SIMD Extensions](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions)
+- [Advanced Vector Extensions SIMD](https://en.wikipedia.org/wiki/AVX-512)
+- [CPU context switch](https://en.wikipedia.org/wiki/Context_switch)
+- [breaking though the maximum process number](https://www.linuxjournal.com/article/4407)
+- [Streaming SIMD Extensions](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions)
