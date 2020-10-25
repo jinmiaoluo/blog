@@ -52,8 +52,6 @@ CS:APP 学习过程记录
 - YMM registers: 用于 AVX 的寄存器. 256 bits.
 - ZMM registers: 用于 AVX-512 的寄存器. 512 bits.
 - Memory barrier: 内存屏障(内存栅栏). 用于实现并发变成里面的锁, 确保并发编程中内存读写的一致性.
-- MMU(Memory Management Unit): 用于 CPU 实现内存虚拟地址到物理地址映射的转换.
-- IOMMU(Input–Output Memory Management Unit): 用于连接具备直接访问内存能力的 I/O 总线设备到内存, 实现 I/O 设备直接访问内存的能力(本质上也是实现虚拟内存地址到物理地址映射的功能). 比如 PCIe 显卡的 graphics address remapping table(GART).
 - PTE(Page Table Entry): todo
 - TLB(Translation Lookaside Buffer): todo
 - TSS(task state segment): todo
@@ -434,4 +432,3 @@ A: leaq 类似于 C 中的 `&` 符号. 这里的作用是将 `8(%rsp)` 的地址
 - [CPU context switch](https://en.wikipedia.org/wiki/Context_switch)
 - [breaking though the maximum process number](https://www.linuxjournal.com/article/4407)
 - [Streaming SIMD Extensions](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions)
-- [Memory Management Unit](https://en.wikipedia.org/wiki/Memory_management_unit)

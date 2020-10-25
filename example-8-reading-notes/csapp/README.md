@@ -2,6 +2,7 @@
 
 - [第一章和第二章](chapter-1-and-chapter-2)
 - [第三章](chapter-3)
+- [第六章](chapter-6)
 
 #### 参考
 - [清华大学-操作系统](https://www.bilibili.com/video/BV1js411b7vg)
