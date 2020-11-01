@@ -16,8 +16,9 @@ CS:APP 学习过程记录
 * [判断局部性好坏的方法](#判断局部性好坏的方法)
 * [几种缓存失效](#几种缓存失效)
 * [如何给你的磁盘测速的同时避免缓存干扰真实速度](#如何给你的磁盘测速的同时避免缓存干扰真实速度)
+* [如何从时间局部性和空间局部性优化代码](#如何从时间局部性和空间局部性优化代码)
 * [词汇汇总](#词汇汇总)
-* [reference](#reference)
+* [参考文档](#参考文档)
 
 <!-- vim-markdown-toc -->
 
@@ -97,6 +98,9 @@ rm tempfile
 - Clear PageCache, dentries and inodes. `sync; echo 3 > /proc/sys/vm/drop_caches`
 - `sync` will flush the file system buffer.
 
+#### 如何从时间局部性和空间局部性优化代码
+
+
 #### 词汇汇总
 - RAM(Random-access memory): 随机存取存储器
 - DRAM(Dynamic random-access memory): 动态随机存取存储器. 常见为: 内存
@@ -129,5 +133,5 @@ rm tempfile
 - dentries: is a data structure that represents a directory
 - inodes: is a data structure that represents a file
 
-#### reference
+#### 参考文档
 - [Memory Management Unit](https://en.wikipedia.org/wiki/Memory_management_unit)

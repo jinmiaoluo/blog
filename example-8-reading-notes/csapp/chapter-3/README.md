@@ -8,7 +8,6 @@ CS:APP 学习过程记录
 
 <!-- vim-markdown-toc GFM -->
 
-* [词汇汇总](#词汇汇总)
 * [两种汇编格式间的差异](#两种汇编格式间的差异)
 * [如何在 C 中调用汇编](#如何在-c-中调用汇编)
 * [汇编指令中的后缀的含义](#汇编指令中的后缀的含义)
@@ -36,30 +35,10 @@ CS:APP 学习过程记录
 * [PCB 存放在哪里](#pcb-存放在哪里)
 * [CPU 如何访问和管理内存](#cpu-如何访问和管理内存)
 * [FAQ:](#faq)
+* [词汇汇总](#词汇汇总)
 * [参考](#参考)
 
 <!-- vim-markdown-toc -->
-
-#### 词汇汇总
-- ISA(Instruction Set Architecture): 指令集架构. 定义了处理器的状态. 指令的格式. 指令对状态的影响.
-- PC(Program Counter): 程序计数器. 是寄存器中的一种. 表示当前正在执行的指令的地址.指示计算机在其程序序列中的位置. 在过程调用中, 通过改变 PC 寄存器的地址. 可以实现调用和函数返回的逻辑.
-- ASM(Assembly): 汇编
-- PCB(Process Control Block): also known as a process descriptor. 用于存储进程的上下文信息. 最终保存到指定的内存区域.
-- SIMD(Single instruction, multiple data): 是一种分类(描述的这个分类的功能), 可以实现一条指令同时处理多个数据.
-- SSE(Streaming SIMD Extensions): 是一套指令集. 含70条新指令, 这些指令具备 SIMD 特性.
-- AVX(Advanced Vector Extensions): SSE 升级版, 比如: AVX AVX2 AVX-512.
-- XMM registers: 用于 SSE 的寄存器. 128 bits.
-- YMM registers: 用于 AVX 的寄存器. 256 bits.
-- ZMM registers: 用于 AVX-512 的寄存器. 512 bits.
-- Memory barrier: 内存屏障(内存栅栏). 用于实现并发变成里面的锁, 确保并发编程中内存读写的一致性.
-- PTE(Page Table Entry): todo
-- TLB(Translation Lookaside Buffer): todo
-- TSS(task state segment): todo
-- GDT(global descriptor table): todo
-- LDT(local descriptor table): todo
-- TR(task register): todo
-- IDT/IVT(interrupt descriptor table): In the 8086 processor, the interrupt table is called IVT (interrupt vector table). 包含了 interrupt 到 ISR 的映射.
-- ISR(interrupt service routine): is a special block of code associated with a specific interrupt condition. such as system call.
 
 #### 两种汇编格式间的差异
 
@@ -409,7 +388,7 @@ gdb multiple-arguments
 
 #### CPU 如何访问和管理内存
 
-<!-- todo -->
+<!-- todo: 什么是 page. page table. TLB. -->
 
 #### FAQ:
 
@@ -420,6 +399,28 @@ A: AMD & Intel 二者都提供了 ISA 的文档. 见参考. 可以在 TOC 内找
 Q: `leaq 8(%rsp) %rdi` 表示的含义
 
 A: leaq 类似于 C 中的 `&` 符号. 这里的作用是将 `8(%rsp)` 的地址存到 %rdi.
+
+#### 词汇汇总
+- ISA(Instruction Set Architecture): 指令集架构. 定义了处理器的状态. 指令的格式. 指令对状态的影响.
+- PC(Program Counter): 程序计数器. 是寄存器中的一种. 表示当前正在执行的指令的地址.指示计算机在其程序序列中的位置. 在过程调用中, 通过改变 PC 寄存器的地址. 可以实现调用和函数返回的逻辑.
+- ASM(Assembly): 汇编
+- PCB(Process Control Block): also known as a process descriptor. 用于存储进程的上下文信息. 最终保存到指定的内存区域.
+- SIMD(Single instruction, multiple data): 是一种分类(描述的这个分类的功能), 可以实现一条指令同时处理多个数据.
+- SSE(Streaming SIMD Extensions): 是一套指令集. 含70条新指令, 这些指令具备 SIMD 特性.
+- AVX(Advanced Vector Extensions): SSE 升级版, 比如: AVX AVX2 AVX-512.
+- XMM registers: 用于 SSE 的寄存器. 128 bits.
+- YMM registers: 用于 AVX 的寄存器. 256 bits.
+- ZMM registers: 用于 AVX-512 的寄存器. 512 bits.
+- Memory barrier: 内存屏障(内存栅栏). 用于实现并发变成里面的锁, 确保并发编程中内存读写的一致性.
+- PTE(Page Table Entry): todo
+- TLB(Translation Lookaside Buffer): todo
+- TSS(task state segment): todo
+- GDT(global descriptor table): todo
+- LDT(local descriptor table): todo
+- TR(task register): todo
+- IDT/IVT(interrupt descriptor table): In the 8086 processor, the interrupt table is called IVT (interrupt vector table). 包含了 interrupt 到 ISR 的映射.
+- ISR(interrupt service routine): is a special block of code associated with a specific interrupt condition. such as system call.
+
 
 #### 参考
 - [条件码寄存器-维基百科](https://en.wikipedia.org/wiki/FLAGS_register)
