@@ -5,7 +5,6 @@ CS:APP 学习过程记录
 文中的插图出自 Computer Systems: A Programmer's Perspective, 3/E (CS:APP3e). 版权归原作者所有.
 
 #### 目录
-
 <!-- vim-markdown-toc GFM -->
 
 * [这一章的学习目标](#这一章的学习目标)
@@ -20,17 +19,33 @@ CS:APP 学习过程记录
 * [如何加载和链接动态库](#如何加载和链接动态库)
 * [库插入(library interposition/库打桩)是什么](#库插入library-interposition库打桩是什么)
 * [库插入(library interposition/库打桩)的作用](#库插入library-interposition库打桩的作用)
-* [Tips](#tips)
-  * [GNU binutils 包中的工具和对应的作用(这些工具很棒, 建议实际使用一下这些工具)](#gnu-binutils-包中的工具和对应的作用这些工具很棒-建议实际使用一下这些工具)
-  * [ar 的基本用法](#ar-的基本用法)
-  * [strings 的基本用法](#strings-的基本用法)
-  * [strip 的基本用法](#strip-的基本用法)
-  * [nm 的基本用法](#nm-的基本用法)
-  * [size 的基本用法](#size-的基本用法)
-  * [readelf 的基本用法](#readelf-的基本用法)
-  * [objdump 的基本用法](#objdump-的基本用法)
-  * [ldd 的基本用法](#ldd-的基本用法)
+* [PIC GOT PLT 和链接器的作用](#pic-got-plt-和链接器的作用)
+* [第六章Tips](#第六章tips)
+	* [GNU binutils 包中的工具和对应的作用(这些工具很棒, 建议实际使用一下这些工具)](#gnu-binutils-包中的工具和对应的作用这些工具很棒-建议实际使用一下这些工具)
+	* [ar 的基本用法](#ar-的基本用法)
+	* [strings 的基本用法](#strings-的基本用法)
+	* [strip 的基本用法](#strip-的基本用法)
+	* [nm 的基本用法](#nm-的基本用法)
+	* [size 的基本用法](#size-的基本用法)
+	* [readelf 的基本用法](#readelf-的基本用法)
+	* [objdump 的基本用法](#objdump-的基本用法)
+	* [ldd 的基本用法](#ldd-的基本用法)
+* [四类中断的含义](#四类中断的含义)
+* [x86-64中断相关的寄存器](#x86-64中断相关的寄存器)
+* [汇编进行系统调用](#汇编进行系统调用)
+* [C 如何实现多进程](#c-如何实现多进程)
+* [fork 和 execute 系统调用的差异](#fork-和-execute-系统调用的差异)
+* [如何给目的进程传递信号](#如何给目的进程传递信号)
+* [什么是阻塞式信号和非阻塞式信号, 有何作用](#什么是阻塞式信号和非阻塞式信号-有何作用)
+* [如何查看和发送信号给进程组](#如何查看和发送信号给进程组)
+* [并发编程的基本原则](#并发编程的基本原则)
+* [如何清理 zombie 进程](#如何清理-zombie-进程)
+* [书中说到的竞争的例子是如何产生的](#书中说到的竞争的例子是如何产生的)
+* [什么是非本地跳转, 作用是什么, 潜在的问题](#什么是非本地跳转-作用是什么-潜在的问题)
+* [操作进程的常用工具, 有何作用, 如何使用](#操作进程的常用工具-有何作用-如何使用)
+* [PID PGID UID SID 各自代表的信息和作用](#pid-pgid-uid-sid-各自代表的信息和作用)
 * [词汇汇总](#词汇汇总)
+* [参考文档](#参考文档)
 
 <!-- vim-markdown-toc -->
 
@@ -86,7 +101,11 @@ todo: 知道如何加载和链接, 避免今后对加载和链接相关的基础
 - 验证和追踪库函数的输入输出值
 - 替换库函数, 验证一个自己实现的库函数
 
-#### Tips
+#### PIC GOT PLT 和链接器的作用
+
+todo: 链接静态库和动态库是机器代码中常见. 见参考
+
+#### 第六章Tips
 
 ##### GNU binutils 包中的工具和对应的作用(这些工具很棒, 建议实际使用一下这些工具)
 
@@ -323,8 +342,88 @@ libc.so.6 => /usr/lib/libc.so.6 (0x00007f50adf7d000)
 
 可以看到它依赖了4个动态库.
 
+#### 四类中断的含义
+
+todo: 这四种异常的原因(区别). 发生这种异常时, 系统是如何应对的. 这是了解中断作用的基础.
+
+- Interrupt: 中断.
+- Trap: 陷阱.
+- Fault: 错误.
+- Abort: 中止.
+
+如何处理中断:
+
+如何处理陷阱:
+
+如何处理错误:
+
+如何处理中止:
+
+#### x86-64中断相关的寄存器
+
+todo: 记录中断相关寄存器的作用. 这是了解汇编如何实现自己的中断处理函数的基础.
+
+#### 汇编进行系统调用
+
+见: `hello.s`
+
+#### C 如何实现多进程
+
+todo: 通过什么系统调用? fork 系统调用的一次调用多次返回的作用是什么? 并发和并行的区别是什么? 线程并发和进程并发有何区别?
+
+#### fork 和 execute 系统调用的差异
+
+todo: 有何相同之处, 有何不同之处
+
+#### 如何给目的进程传递信号
+
+todo: 如何实现, 有何效果
+
+#### 什么是阻塞式信号和非阻塞式信号, 有何作用
+
+todo: 阻塞式信号的目的
+
+#### 如何查看和发送信号给进程组
+
+todo: linux 如何查看进程组, 进程组有何作用
+
+#### 并发编程的基本原则
+
+todo
+
+#### 如何清理 zombie 进程
+
+todo
+
+#### 书中说到的竞争的例子是如何产生的
+
+todo
+
+#### 什么是非本地跳转, 作用是什么, 潜在的问题
+
+todo
+
+#### 操作进程的常用工具, 有何作用, 如何使用
+
+todo: ps 如何查看 zombie 进程
+todo: strace 如何查看进程和子进程的系统调用
+todo: pmap 打印内存映射
+todo: top 如何查看进程资源占用
+
+#### PID PGID UID SID 各自代表的信息和作用
+
+todo
+
 #### 词汇汇总
+
 - ELF(Executable and Linkable Format): Unix 系统使用的二进制组织格式. 用于可执行文件, 对象文件, 动态库文件, core dump 文件.
 - PE(Portable Executable): 可移植可执行 (PE) 格式是一种文件格式, 用于Windows操作系统的32位和64位版本中使用的可执行文件, 目标代码, DLL和其他文件.
 - Mach-O: Mach-O是Mach目标文件格式的缩写,是可执行文件,目标代码,共享库,动态加载的代码和核心转储的文件格式. Mach-O替代a.out格式,可提供更大的可扩展性并更快地访问符号表中的信息. 大多数基于Mach内核的系统都使用Mach-O. NeXTSTEP,macOS和iOS是使用此格式的本机可执行文件,库和目标代码的系统示例.
 - Library interposition: 库插入. 是一种技术.
+- ECF(exception control flow):
+- GOT(Global Offset Table):
+- PIC(Position Independent Code):
+- PLT(Procedure Linkage Table):
+
+#### 参考文档
+- [How is glibc loaded at runtime?](http://dustin.schultz.io/how-is-glibc-loaded-at-runtime.html)
