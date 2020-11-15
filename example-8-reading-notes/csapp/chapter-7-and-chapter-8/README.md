@@ -1,4 +1,4 @@
-# 第六章
+# 第七章和第八章
 
 CS:APP 学习过程记录
 
@@ -21,15 +21,15 @@ CS:APP 学习过程记录
 * [库插入(library interposition/库打桩)的作用](#库插入library-interposition库打桩的作用)
 * [PIC GOT PLT 和链接器的作用](#pic-got-plt-和链接器的作用)
 * [第六章Tips](#第六章tips)
-	* [GNU binutils 包中的工具和对应的作用(这些工具很棒, 建议实际使用一下这些工具)](#gnu-binutils-包中的工具和对应的作用这些工具很棒-建议实际使用一下这些工具)
-	* [ar 的基本用法](#ar-的基本用法)
-	* [strings 的基本用法](#strings-的基本用法)
-	* [strip 的基本用法](#strip-的基本用法)
-	* [nm 的基本用法](#nm-的基本用法)
-	* [size 的基本用法](#size-的基本用法)
-	* [readelf 的基本用法](#readelf-的基本用法)
-	* [objdump 的基本用法](#objdump-的基本用法)
-	* [ldd 的基本用法](#ldd-的基本用法)
+  * [GNU binutils 包中的工具和对应的作用(这些工具很棒, 建议实际使用一下这些工具)](#gnu-binutils-包中的工具和对应的作用这些工具很棒-建议实际使用一下这些工具)
+  * [ar 的基本用法](#ar-的基本用法)
+  * [strings 的基本用法](#strings-的基本用法)
+  * [strip 的基本用法](#strip-的基本用法)
+  * [nm 的基本用法](#nm-的基本用法)
+  * [size 的基本用法](#size-的基本用法)
+  * [readelf 的基本用法](#readelf-的基本用法)
+  * [objdump 的基本用法](#objdump-的基本用法)
+  * [ldd 的基本用法](#ldd-的基本用法)
 * [四类中断的含义](#四类中断的含义)
 * [x86-64中断相关的寄存器](#x86-64中断相关的寄存器)
 * [汇编进行系统调用](#汇编进行系统调用)
@@ -44,11 +44,15 @@ CS:APP 学习过程记录
 * [什么是非本地跳转, 作用是什么, 潜在的问题](#什么是非本地跳转-作用是什么-潜在的问题)
 * [操作进程的常用工具, 有何作用, 如何使用](#操作进程的常用工具-有何作用-如何使用)
 * [PID PGID UID SID 各自代表的信息和作用](#pid-pgid-uid-sid-各自代表的信息和作用)
+* [虚拟内存如何保护物理内存](#虚拟内存如何保护物理内存)
+* [MMU 作用](#mmu-作用)
+* [TLB 的作用](#tlb-的作用)
+* [虚拟内存共享对象的作用](#虚拟内存共享对象的作用)
+* [写时复制在私有对象上的作用](#写时复制在私有对象上的作用)
 * [词汇汇总](#词汇汇总)
 * [参考文档](#参考文档)
 
 <!-- vim-markdown-toc -->
-
 #### 这一章的学习目标
 
 - 二进制是如何组织的?
@@ -414,6 +418,30 @@ todo: top 如何查看进程资源占用
 
 todo
 
+#### 虚拟内存如何保护物理内存
+
+虚拟内存通过页表项的标志位, 控制进程对虚拟内存页的访问. 从而控制进程是否可以读或者写当前虚拟内存页, 是否需要进程跑在内核模式才能访问虚拟内存页.
+
+![use-vm-to-provide-page-level-memory-protection.png](use-vm-to-provide-page-level-memory-protection.png)
+
+#### MMU 作用
+
+MMU 实现虚拟地址到物理地址的地址翻译. 当指令访问一个虚拟地址, MMU 将根据虚拟地址, 查询页表, 得到 PTE, 然后根据 PTE 和 VA 计算出物理地址, 根据物理地址访问主存.
+
+#### TLB 的作用
+
+页表保存在内存中, 查询 PTE 需要消耗 CPU 周期, 因此, 会通过缓存(内嵌到MMU)缓存部分 PTE, 避免访问主存中的页表, 从而加快地址翻译.
+
+#### 虚拟内存共享对象的作用
+
+通过虚拟地址指向相同的物理地址, 复用内存中的数据, 比如标准库中的代码, 从而减少物理内存占用. 不用每个进程都保存标准库中的代码.
+
+#### 写时复制在私有对象上的作用
+
+两个进程通过虚拟内存映射相同的物理内存副本实现共享, 但是, 当有进程要写私有区域时, 会触发 protection fault, fault 处理函数会拷贝物理内存, 从而新建一个新的副本, 从而实现写入操作, 继续后面的指令. 这个操作即为写时复制. 作用是减少了物理内存的使用.
+
+![a-private-copy-on-write-object.png](a-private-copy-on-write-object.png)
+
 #### 词汇汇总
 
 - ELF(Executable and Linkable Format): Unix 系统使用的二进制组织格式. 用于可执行文件, 对象文件, 动态库文件, core dump 文件.
@@ -424,6 +452,7 @@ todo
 - GOT(Global Offset Table):
 - PIC(Position Independent Code):
 - PLT(Procedure Linkage Table):
+- TLB( translation lookaside buffer): 翻译后备缓冲器, MMU 的缓存设备, 用于 MMU 的 SRAM 设备. 实现缓存, 加快 PTE 地址翻译. 集成在 MMU 设备内. MMU 是 CPU 的组成部分.
 
 #### 参考文档
 - [How is glibc loaded at runtime?](http://dustin.schultz.io/how-is-glibc-loaded-at-runtime.html)
