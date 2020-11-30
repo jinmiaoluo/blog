@@ -448,10 +448,10 @@ MMU 实现虚拟地址到物理地址的地址翻译. 当指令访问一个虚�
 - PE(Portable Executable): 可移植可执行 (PE) 格式是一种文件格式, 用于Windows操作系统的32位和64位版本中使用的可执行文件, 目标代码, DLL和其他文件.
 - Mach-O: Mach-O是Mach目标文件格式的缩写,是可执行文件,目标代码,共享库,动态加载的代码和核心转储的文件格式. Mach-O替代a.out格式,可提供更大的可扩展性并更快地访问符号表中的信息. 大多数基于Mach内核的系统都使用Mach-O. NeXTSTEP,macOS和iOS是使用此格式的本机可执行文件,库和目标代码的系统示例.
 - Library interposition: 库插入. 是一种技术.
-- ECF(exception control flow):
-- GOT(Global Offset Table):
-- PIC(Position Independent Code):
-- PLT(Procedure Linkage Table):
+- ECF(exception control flow): 异常控制流. 实现系统调用, 错误处理的一种方法.
+- GOT(Global Offset Table): 全局偏移表（GOT）是计算机程序（可执行文件和共享库）内存的一部分, 用于使编译为ELF文件的计算机程序代码能够正确运行, 而与加载程序代码或数据的内存地址无关在运行时.
+- PIC(Position Independent Code): 位置独立代码.
+- PLT(Procedure Linkage Table): 程序链接表.
 - TLB( translation lookaside buffer): 翻译后备缓冲器, MMU 的缓存设备, 用于 MMU 的 SRAM 设备. 实现缓存, 加快 PTE 地址翻译. 集成在 MMU 设备内. MMU 是 CPU 的组成部分.
 
 #### 参考文档
