@@ -1,4 +1,4 @@
-# 第七章和第八章
+# 第七章
 
 CS:APP 学习过程记录
 
@@ -20,7 +20,7 @@ CS:APP 学习过程记录
 * [库插入(library interposition/库打桩)是什么](#库插入library-interposition库打桩是什么)
 * [库插入(library interposition/库打桩)的作用](#库插入library-interposition库打桩的作用)
 * [PIC GOT PLT 和链接器的作用](#pic-got-plt-和链接器的作用)
-* [第六章Tips](#第六章tips)
+* [第七章Tips](#第七章tips)
   * [GNU binutils 包中的工具和对应的作用(这些工具很棒, 建议实际使用一下这些工具)](#gnu-binutils-包中的工具和对应的作用这些工具很棒-建议实际使用一下这些工具)
   * [ar 的基本用法](#ar-的基本用法)
   * [strings 的基本用法](#strings-的基本用法)
@@ -109,7 +109,7 @@ todo: 知道如何加载和链接, 避免今后对加载和链接相关的基础
 
 todo: 链接静态库和动态库是机器代码中常见. 见参考
 
-#### 第六章Tips
+#### 第七章Tips
 
 ##### GNU binutils 包中的工具和对应的作用(这些工具很棒, 建议实际使用一下这些工具)
 
