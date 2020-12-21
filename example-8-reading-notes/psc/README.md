@@ -7,6 +7,11 @@
 <!-- vim-markdown-toc GFM -->
 
 * [强引用和弱引用是什么, 有什么用](#强引用和弱引用是什么-有什么用)
+* [如何查看二进制文件的十六进制表示形式](#如何查看二进制文件的十六进制表示形式)
+* [如何查看 ELF 的头部信息](#如何查看-elf-的头部信息)
+* [如何查看 ELF 文件的段头信息](#如何查看-elf-文件的段头信息)
+* [关于 `static` 和 `extern`](#关于-static-和-extern)
+* [一点建议](#一点建议)
 
 <!-- vim-markdown-toc -->
 
@@ -19,3 +24,35 @@
 出现同名符号的问题.
 
 弱引用方法还可以用于判断当前的程序是链接到单线程的 Glibc 还是多线程的 Glibc.
+
+#### 如何查看二进制文件的十六进制表示形式
+
+```shell
+hexdump -C SimpleSection.o
+# 或者用 hexyl 这个项目
+hexyl SimpleSection.o
+```
+
+#### 如何查看 ELF 的头部信息
+
+```shell
+readelf -h SimpleSection.o
+```
+
+#### 如何查看 ELF 文件的段头信息
+
+```shell
+readelf -S SimpleSection.o
+```
+
+#### 关于 `static` 和 `extern`
+
+在 `StaticAndExtern.c` `StaticAndExtern.h` 中有关于这两个关键字用法的一点笔记.
+
+#### 一点建议
+
+这本书我相信初始的目的应该是作者的学习笔记. 通过阅读其他书籍, 源码,
+解答自己的疑惑, 汇集的疑惑和完整的解答, 久而久之就是这本不错的书了. 因此,
+建议在阅读这本书的时候, 结合 [glibc](git://sourceware.org/git/glibc.git)
+的源码来阅读的书籍. 比如在第三章, 谈及 ELF 格式的时候. elf.h
+内的定义就可以参考着阅读.
