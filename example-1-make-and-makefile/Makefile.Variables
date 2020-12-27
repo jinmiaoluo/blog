@@ -1,9 +1,13 @@
 # 变量声明放在最前面(为了方便阅读, 本文件内暂时不遵守这点)
 # 内部变量用小写字母(这里 targets 表示多个目标)
 targets = 1 2 3
-another-targets = 4 7 8 9
+another-targets = 4 7 8 9 10 $(recursive_targets)
 # 内部变量用小写字母(这里 goals 表示多个构建结果)
 goals = 5 6
+
+# 定义递归处理的 targets. 见 target: 10 11 12
+L = 11-recursive 12-recursive
+recursive_targets = $(L:-recursive=)
 
 # 伪目标, 这个目标没有对应的生成文件
 .PHONY: all
@@ -93,3 +97,18 @@ K ?= world
 #
 # 解释:
 # ?= 的作用是有条件赋值. 只有在一个变量还没有被定义过时才能被赋值. J 因为已经被赋值为 hello. 因此 `J ?= world` 没有生效. 所以结果是 `hello world` 而不是 `world world`
+
+10:
+	@echo target: $@ with output: ${L:-recursive=}
+# output: 11
+#
+# 解释:
+# 递归的处理变量的值, 会把 `11-recursive` 的 `-recursive` 部分删除掉.
+# 这一块的功能实际上是 make 的 patsubst 函数提供的. 完整的用法实际上是:
+# $(var:suffix=replacement) 只是我们的 `=` 后面为空, 所以是删除后缀.
+
+11:
+	@echo target: $@ with output: hello
+
+12:
+	@echo target: $@ with output: world
