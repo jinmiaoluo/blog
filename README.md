@@ -16,6 +16,7 @@
 - [基于 SSH 的国内服务器加速访问国外网站的方案](example-5-ssh-based-domestic-server-to-accelerate-access-to-foreign-websites)
 - [读书笔记](example-8-reading-notes)
 - [status update](example-9-status)
+- [GNU 构建系统工具用法](example-10-GNU-build-system-tool-usage)
 
 #### RSS 订阅
 - [订阅地址](https://github.com/jinmiaoluo/blog/commits/main.atom)
