@@ -5,6 +5,10 @@
 - [Golang 相关](https://github.com/jinmiaoluo/goplay)
 - [C 相关](https://github.com/jinmiaoluo/cplay)
 - [Vim 相关](https://github.com/jinmiaoluo/vimplay)
+- [JavaScript/TypeScript 相关](https://github.com/jinmiaoluo/xsplay)
+- [Rust 相关](https://github.com/jinmiaoluo/rustplay)
+- [Python 相关](https://github.com/jinmiaoluo/pythonplay)
+- [Java 相关](https://github.com/jinmiaoluo/javaplay)
 
 #### 未分类
 - [make 和 Makefile](example-1-make-and-makefile)
